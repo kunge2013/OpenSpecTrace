@@ -10,6 +10,7 @@
 | 领域 | 模块 | 入口点 | 最后更新 | 关键词 |
 |------|------|--------|----------|--------|
 | openspec-trace | [skill-extension](../openspec-trace/skill-extension/INDEX.md) | `node dist/cli/install.js` | 2026-06-24 | skill-generation, code-archive, business-search, template, cli |
+| toolchain | [completion](../openspec-trace/toolchain/completion/INDEX.md) | `opst completion [bash\|zsh\|fish]` | 2026-06-24 | shell补全, Tab补全, Bash, Zsh, Fish, CLI |
 
 ## 按关键词
 
@@ -23,3 +24,9 @@
 | template | openspec-trace | skill-extension | [INDEX](../openspec-trace/skill-extension/INDEX.md) |
 | cli | openspec-trace | skill-extension | [INDEX](../openspec-trace/skill-extension/INDEX.md) |
 | openspec | openspec-trace | skill-extension | [INDEX](../openspec-trace/skill-extension/INDEX.md) |
+| shell补全 | toolchain | completion | [INDEX](../openspec-trace/toolchain/completion/INDEX.md) |
+| Tab补全 | toolchain | completion | [INDEX](../openspec-trace/toolchain/completion/INDEX.md) |
+| Bash | toolchain | completion | [INDEX](../openspec-trace/toolchain/completion/INDEX.md) |
+| Zsh | toolchain | completion | [INDEX](../openspec-trace/toolchain/completion/INDEX.md) |
+| Fish | toolchain | completion | [INDEX](../openspec-trace/toolchain/completion/INDEX.md) |
+| completion | toolchain | completion | [INDEX](../openspec-trace/toolchain/completion/INDEX.md) |

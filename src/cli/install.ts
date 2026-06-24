@@ -18,6 +18,7 @@ import * as path from 'node:path';
 import * as fs from 'node:fs';
 import { createRequire } from 'node:module';
 import { generateOpstSkills, type GenerationReport, getSkillTemplates, getCommandTemplates } from '../core/skill-generation.js';
+import { getCompletionScript, isSupportedShell, SUPPORTED_SHELLS } from '../core/completion/index.js';
 
 const require = createRequire(import.meta.url);
 const { version: OPST_VERSION } = require('../../package.json') as { version: string };
@@ -28,11 +29,12 @@ const { version: OPST_VERSION } = require('../../package.json') as { version: st
 
 // [AGC:START] tool=Cc author=fangkun
 interface CliOptions {
-  subcommand: 'install' | 'init';
+  subcommand: 'install' | 'init' | 'completion';
   workspace: string;
   dryRun: boolean;
   showVersion: boolean;
   showHelp: boolean;
+  completionShell: string | undefined;
 }
 
 function parseArgs(argv: string[]): CliOptions {
@@ -43,15 +45,21 @@ function parseArgs(argv: string[]): CliOptions {
     dryRun: false,
     showVersion: false,
     showHelp: false,
+    completionShell: undefined,
   };
 
   let i = 0;
   // 检测可选的子命令（第一个非 flag 参数）
   if (args.length > 0 && !args[0].startsWith('-')) {
     const sub = args[0];
-    if (sub === 'install' || sub === 'init') {
+    if (sub === 'install' || sub === 'init' || sub === 'completion') {
       opts.subcommand = sub;
       i = 1;
+      // completion 子命令的 shell 参数
+      if (sub === 'completion' && args.length > 1 && !args[1].startsWith('-')) {
+        opts.completionShell = args[1];
+        i = 2;
+      }
     }
   }
 
@@ -90,6 +98,7 @@ openspec-trace v${OPST_VERSION} — opst skill installer & knowledge base initia
 用法：
   opst init      [options]   初始化项目（知识库骨架 + skills + commands）
   opst [install] [options]   仅安装/更新 skills 和 commands（不含知识库）
+  opst completion [shell]    输出 shell 补全脚本（bash、zsh、fish）
 
 选项：
   --workspace, -w <path>   指定工作区根目录（默认：当前目录）
@@ -102,6 +111,8 @@ openspec-trace v${OPST_VERSION} — opst skill installer & knowledge base initia
   opst init --workspace /path       在指定目录初始化项目
   opst install                      仅更新 skills（知识库已存在时）
   opst --dry-run                    预览 install 生成的文件路径
+  opst completion bash              输出 Bash 补全脚本
+  eval "$(opst completion bash)"    启用 Bash 补全
 `);
 }
 
@@ -132,6 +143,34 @@ function printReport(report: GenerationReport, workspace: string, dryRun: boolea
   console.log('可用命令：');
   console.log('  /opst:code-anysic        — 分析已归档变更，提取业务逻辑并归档到知识库');
   console.log('  /opst:business-search    — 检索 openspec/openspec-trace/ 知识库中的业务逻辑文档');
+}
+
+function printCompletionUsage(): void {
+  console.log(`
+opst completion — 输出 shell 自动补全脚本
+
+用法：
+  opst completion bash    输出 Bash 补全脚本
+  opst completion zsh     输出 Zsh 补全脚本
+  opst completion fish    输出 Fish 补全脚本
+
+安装方式：
+
+  # Bash（当前会话）
+  eval "$(opst completion bash)"
+
+  # Bash（永久生效，添加到 ~/.bashrc）
+  echo 'eval "$(opst completion bash)"' >> ~/.bashrc
+
+  # Zsh（当前会话）
+  eval "$(opst completion zsh)"
+
+  # Zsh（永久生效，添加到 ~/.zshrc）
+  echo 'eval "$(opst completion zsh)"' >> ~/.zshrc
+
+  # Fish（永久生效）
+  opst completion fish > ~/.config/fish/completions/opst.fish
+`);
 }
 // [AGC:END]
 
@@ -260,6 +299,20 @@ async function main(): Promise<void> {
 
   if (opts.showHelp) {
     printHelp();
+    return;
+  }
+
+  // ── completion 子命令 ──────────────────────────
+  if (opts.subcommand === 'completion') {
+    if (!opts.completionShell) {
+      printCompletionUsage();
+      return;
+    }
+    if (!isSupportedShell(opts.completionShell)) {
+      console.error(`错误：不支持的 shell "${opts.completionShell}"。支持的 shell：${SUPPORTED_SHELLS.join('、')}`);
+      process.exit(1);
+    }
+    process.stdout.write(getCompletionScript(opts.completionShell));
     return;
   }
 
