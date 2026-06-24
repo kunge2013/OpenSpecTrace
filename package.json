@@ -1,0 +1,29 @@
+{
+  "name": "openspec-trace",
+  "version": "1.0.0",
+  "description": "OpenSpec 闭环开发增强套件 — 代码逻辑归档与业务逻辑检索扩展",
+  "keywords": ["openspec", "skills", "knowledge", "ai"],
+  "license": "MIT",
+  "author": "fangkun",
+  "type": "module",
+  "bin": {
+    "opst": "./bin/opst.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "!dist/**/*.map"
+  ],
+  "scripts": {
+    "build": "node D:/npm/prefix/node_modules/typescript/bin/tsc --project tsconfig.json",
+    "install-skills": "node dist/cli/install.js",
+    "dev": "node D:/npm/prefix/node_modules/typescript/bin/tsc --project tsconfig.json --watch"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0",
+    "@types/node": "^22.0.0"
+  }
+}

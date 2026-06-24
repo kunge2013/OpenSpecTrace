@@ -1,0 +1,28 @@
+schema: spec-driven
+
+# Project context (optional)
+# This is shown to AI when creating artifacts.
+# Add your tech stack, conventions, style guides, domain knowledge, etc.
+context: |
+  Tech stack: Node.js v22.18.0
+  Node.js version: v22.18.0 (LTS)
+  All code must be compatible with Node.js v22.18.0
+  文档语言：所有生成文档（proposal、design、tasks、specs 归档等）使用中文撰写
+  文档规范：遵循中文技术文档写作习惯，标题、正文、注释均使用中文
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+rules:
+  proposal:
+    - 使用中文撰写
+    - 包含"非目标"章节
+  design:
+    - 使用中文撰写
+    - 架构图和流程图可保留英文技术术语
+  tasks:
+    - 使用中文撰写
+    - 任务描述简洁明确
+  spec:
+    - 使用中文撰写
+    - 业务描述和规则使用中文
+    - 代码示例和技术术语可保留英文
